@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import KanbanBoard from './KanbanBoard'
 import AlertConfig from './AlertConfig'
+import './App.css'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -44,18 +44,20 @@ function App() {
 
   if (session) {
     return (
-      <div style={{ fontFamily: 'sans-serif' }}>
-        <div style={{ padding: '20px 20px 0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div>
+        <div className="navbar">
           <h1>JobFirst</h1>
           <div>
-            <button onClick={() => setView('board')} style={{ marginRight: '10px', fontWeight: view === 'board' ? 'bold' : 'normal' }}>
+            <button className={`nav-btn ${view === 'board' ? 'active' : ''}`} onClick={() => setView('board')}>
               Board
             </button>
-            <button onClick={() => setView('alerts')} style={{ marginRight: '10px', fontWeight: view === 'alerts' ? 'bold' : 'normal' }}>
+            <button className={`nav-btn ${view === 'alerts' ? 'active' : ''}`} onClick={() => setView('alerts')}>
               Alert Preferences
             </button>
-            <span style={{ marginRight: '10px' }}>{session.user.email}</span>
-            <button onClick={handleLogout}>Log Out</button>
+            <span style={{ marginRight: '10px', marginLeft: '10px', color: '#6b7280', fontSize: '14px' }}>
+              {session.user.email}
+            </span>
+            <button className="logout-btn" onClick={handleLogout}>Log Out</button>
           </div>
         </div>
         {view === 'board' ? (
@@ -68,41 +70,37 @@ function App() {
   }
 
   return (
-    <div style={{ padding: '40px', fontFamily: 'sans-serif', maxWidth: '400px', margin: '0 auto' }}>
-      <h1>JobFirst</h1>
-      <h2>{isSignUp ? 'Sign Up' : 'Log In'}</h2>
-      <form onSubmit={handleAuth}>
-        <div style={{ marginBottom: '10px' }}>
+    <div className="login-wrapper">
+      <div className="login-box">
+        <h1>JobFirst</h1>
+        <h2>{isSignUp ? 'Create your account' : 'Welcome back'}</h2>
+        <form onSubmit={handleAuth}>
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
             required
           />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px' }}
             required
           />
-        </div>
-        <button type="submit" style={{ width: '100%', padding: '10px' }}>
-          {isSignUp ? 'Sign Up' : 'Log In'}
-        </button>
-      </form>
-      <p style={{ marginTop: '10px' }}>
-        {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-        <button onClick={() => setIsSignUp(!isSignUp)} style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}>
-          {isSignUp ? 'Log In' : 'Sign Up'}
-        </button>
-      </p>
-      {message && <p style={{ color: 'red' }}>{message}</p>}
+          <button type="submit">
+            {isSignUp ? 'Sign Up' : 'Log In'}
+          </button>
+        </form>
+        <p style={{ marginTop: '16px', fontSize: '14px', color: '#6b7280' }}>
+          {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+          <button className="toggle-btn" onClick={() => setIsSignUp(!isSignUp)}>
+            {isSignUp ? 'Log In' : 'Sign Up'}
+          </button>
+        </p>
+        {message && <p className={message.includes('successful') ? 'success-msg' : 'error-msg'}>{message}</p>}
+      </div>
     </div>
   )
 }

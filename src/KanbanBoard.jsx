@@ -65,36 +65,26 @@ function KanbanBoard({ userId }) {
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <button onClick={() => setShowForm(!showForm)} style={{ marginBottom: '20px', padding: '10px' }}>
+    <div>
+      <button className="add-btn" onClick={() => setShowForm(!showForm)}>
         {showForm ? 'Cancel' : '+ Add Application'}
       </button>
 
       {showForm && (
-        <form onSubmit={handleAdd} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-          <input placeholder="Job Title" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required style={{ padding: '8px' }} />
-          <input placeholder="Company" value={company} onChange={(e) => setCompany(e.target.value)} style={{ padding: '8px' }} />
-          <input placeholder="Job URL" value={jobUrl} onChange={(e) => setJobUrl(e.target.value)} style={{ padding: '8px' }} />
-          <button type="submit" style={{ padding: '8px' }}>Add</button>
+        <form onSubmit={handleAdd} className="add-form">
+          <input placeholder="Job Title" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
+          <input placeholder="Company" value={company} onChange={(e) => setCompany(e.target.value)} />
+          <input placeholder="Job URL" value={jobUrl} onChange={(e) => setJobUrl(e.target.value)} />
+          <button type="submit" className="add-btn" style={{ margin: 0 }}>Add</button>
         </form>
       )}
 
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div style={{ display: 'flex', gap: '15px', overflowX: 'auto' }}>
+        <div className="board">
           {COLUMNS.map((col) => (
             <Droppable droppableId={col} key={col}>
               {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  style={{
-                    background: '#f4f4f4',
-                    borderRadius: '8px',
-                    padding: '10px',
-                    minWidth: '220px',
-                    minHeight: '400px',
-                  }}
-                >
+                <div ref={provided.innerRef} {...provided.droppableProps} className="column">
                   <h3>{COLUMN_LABELS[col]}</h3>
                   {applications
                     .filter((app) => app.status === col)
@@ -105,20 +95,14 @@ function KanbanBoard({ userId }) {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            style={{
-                              background: 'white',
-                              padding: '10px',
-                              borderRadius: '6px',
-                              marginBottom: '8px',
-                              boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
-                              ...provided.draggableProps.style,
-                            }}
+                            className="card"
+                            style={provided.draggableProps.style}
                           >
                             <strong>{app.job_title}</strong>
-                            <p style={{ margin: '4px 0', fontSize: '14px', color: '#555' }}>{app.company}</p>
+                            <p>{app.company}</p>
                             {app.job_url && (
-                              <a href={app.job_url} target="_blank" rel="noreferrer" style={{ fontSize: '12px' }}>
-                                View posting
+                              <a href={app.job_url} target="_blank" rel="noreferrer">
+                                View posting →
                               </a>
                             )}
                           </div>
